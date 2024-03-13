@@ -1,0 +1,33 @@
+show runを使用して、スイッチの現在の状態を確認
+show vlanを使用して、既にvlanが設定されていないか確認
+
+conf tコマンドを使用してコンフィグレーションモードに移行する。
+
+vlan 10で、VLANを作成する。
+
+全ポートに対して、
+switchport mode access
+switchport access vlan 10
+no shutdown
+でモードとVLANの設定、有効化を行う。
+
+それぞれのPC0,1に対して、要件に沿ってセキュリティを設定する
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address ****.****.****
+switchport port-security violation shutdown
+
+PC2に対して、要件に沿ってセキュリティを設定する
+switchport port-security
+switchport port-security maximum 2
+switchport port-security mac-address sticky
+switchport port-security violation restrict
+
+ルーターに対してAAAを設定し、ユーザーネームを求められるように設定、radiusサーバーを見に行くようにIPとkeyを設定
+aaa new-model
+aaa authentication login default group radius local
+radius-server host 192.168.1.100 key rad
+
+
+特権モード移行時にパスワードが求められるように設定
+enable password bbb
